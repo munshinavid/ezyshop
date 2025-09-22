@@ -19,13 +19,14 @@ class Database {
     // Function to set DB credentials
     // ------------------------------
     private function setDbCredentials() {
-        // If Railway env exists, use it; otherwise fallback to local DB
-        $this->host = getenv("MYSQLHOST") ?: "127.0.0.1";
-        $this->db_name = getenv("MYSQLDATABASE") ?: "ecomm";  // your local DB name
-        $this->username = getenv("MYSQLUSER") ?: "root";      // your local username
-        $this->password = getenv("MYSQLPASSWORD") ?: "";      // your local password
-        $this->port = getenv("MYSQLPORT") ?: 3306;            // local MySQL port
-    }
+    // Railway DB credentials (temporary hardcode for testing)
+    $this->host = "tramway.proxy.rlwy.net"; // Railway host
+    $this->db_name = "railway";             // Railway DB name
+    $this->username = "root";               // Railway user
+    $this->password = "XjlzbfnpavUQyUJYJOXuqXaScRjWRahs"; // Railway password
+    $this->port = 24447;                    // Railway port (as integer, not string)
+   }
+
 
     // ------------------------------
     // Connect to MySQL
@@ -40,7 +41,6 @@ class Database {
         );
 
         if ($this->conn->connect_error) {
-            echo "Host: {$this->host}, User: {$this->username}, Pass: {$this->password}, DB: {$this->db_name}, Port: {$this->port}";
             throw new Exception("DB Connection failed: " . $this->conn->connect_error);
         }
     }
