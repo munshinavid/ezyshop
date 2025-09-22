@@ -72,8 +72,8 @@ class AuthController {
             
             $user = $this->db->select(
                 "SELECT u.user_id, u.username, u.email, u.password, r.role_name 
-                 FROM Users u 
-                 JOIN Roles r ON u.role_id = r.role_id 
+                 FROM users u 
+                 JOIN roles r ON u.role_id = r.role_id 
                  WHERE u.email = ?",
                 [$email]
             );
@@ -87,7 +87,7 @@ class AuthController {
             $token = $this->generateToken($user['user_id']);
             
             $userDetails = $this->db->select(
-                "SELECT full_name, phone FROM CustomerDetails WHERE user_id = ? LIMIT 1",
+                "SELECT full_name, phone FROM customer_details WHERE user_id = ? LIMIT 1",
                 [$user['user_id']]
             );
             
@@ -146,7 +146,7 @@ class AuthController {
             }
             
             $existingUser = $this->db->select(
-                "SELECT user_id FROM Users WHERE email = ? OR username = ?",
+                "SELECT user_id FROM users WHERE email = ? OR username = ?",
                 [$email, $username]
             );
             if (!empty($existingUser)) {
@@ -154,9 +154,9 @@ class AuthController {
                 return;
             }
             
-            $customerRole = $this->db->select("SELECT role_id FROM Roles WHERE role_name = 'Customer' LIMIT 1");
+            $customerRole = $this->db->select("SELECT role_id FROM roles WHERE role_name = 'Customer' LIMIT 1");
             if (empty($customerRole)) {
-                $this->db->insert("INSERT INTO Roles (role_name) VALUES ('Customer')");
+                $this->db->insert("INSERT INTO roles (role_name) VALUES ('Customer')");
                 $roleId = $this->db->getLastInsertId();
             } else {
                 $roleId = $customerRole[0]['role_id'];
@@ -164,7 +164,7 @@ class AuthController {
             
             $hashedPassword = $password; // In production, use password_hash()
             $success = $this->db->insert(
-                "INSERT INTO Users (username, email, password, role_id) VALUES (?, ?, ?, ?)",
+                "INSERT INTO users (username, email, password, role_id) VALUES (?, ?, ?, ?)",
                 [$username, $email, $hashedPassword, $roleId]
             );
             if (!$success) {
@@ -176,7 +176,7 @@ class AuthController {
             if (!empty($firstName) || !empty($lastName) || !empty($phone)) {
                 $fullName = trim($firstName . ' ' . $lastName);
                 $this->db->insert(
-                    "INSERT INTO CustomerDetails (user_id, full_name, address, phone) VALUES (?, ?, '', ?)",
+                    "INSERT INTO customer_details (user_id, full_name, address, phone) VALUES (?, ?, '', ?)",
                     [$userId, $fullName, $phone]
                 );
             }
@@ -225,8 +225,8 @@ class AuthController {
             
             $user = $this->db->select(
                 "SELECT u.user_id, u.username, u.email, r.role_name 
-                 FROM Users u 
-                 JOIN Roles r ON u.role_id = r.role_id 
+                 FROM users u 
+                 JOIN roles r ON u.role_id = r.role_id 
                  WHERE u.user_id = ?",
                 [$userId]
             );
@@ -237,7 +237,7 @@ class AuthController {
             
             $user = $user[0];
             $userDetails = $this->db->select(
-                "SELECT full_name, phone FROM CustomerDetails WHERE user_id = ? LIMIT 1",
+                "SELECT full_name, phone FROM customer_details WHERE user_id = ? LIMIT 1",
                 [$userId]
             );
             
@@ -287,3 +287,4 @@ class AuthController {
 
 $controller = new AuthController();
 $controller->handleRequest();
+?>
