@@ -397,18 +397,18 @@ class CartController {
         try {
             // Save/update customer details
             $existingDetails = $this->db->select(
-                "SELECT detail_id FROM customerdetails WHERE user_id = ?",
+                "SELECT detail_id FROM customer_details WHERE user_id = ?",
                 [$customerId]
             );
             
             if (!empty($existingDetails)) {
                 $this->db->update(
-                    "UPDATE customerdetails SET full_name = ?, address = ?, phone = ? WHERE user_id = ?",
+                    "UPDATE customer_details SET full_name = ?, address = ?, phone = ? WHERE user_id = ?",
                     [$customerDetails['full_name'], $customerDetails['address'], $customerDetails['phone'], $customerId]
                 );
             } else {
                 $this->db->insert(
-                    "INSERT INTO customerdetails (user_id, full_name, address, phone) VALUES (?, ?, ?, ?)",
+                    "INSERT INTO customer_details (user_id, full_name, address, phone) VALUES (?, ?, ?, ?)",
                     [$customerId, $customerDetails['full_name'], $customerDetails['address'], $customerDetails['phone']]
                 );
             }
