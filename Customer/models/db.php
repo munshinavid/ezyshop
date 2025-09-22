@@ -40,6 +40,7 @@ class Database {
         );
 
         if ($this->conn->connect_error) {
+            echo "Host: {$this->host}, User: {$this->username}, Pass: {$this->password}, DB: {$this->db_name}, Port: {$this->port}";
             throw new Exception("DB Connection failed: " . $this->conn->connect_error);
         }
     }
